@@ -47,9 +47,9 @@ Navamukunda Higher Secondary School &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&e
         </p>
         <p>{{ form.submit() }}</p><br>
     <br>
-
-    <h1>Attendance Percentage of {{ student.student_name}} is <font color="blue">{{student.attendance_percentage}}%</font></h1>
-
+    {% if student %}
+    <h1>Attendance percentage of {{student.student_name}} is <font color="blue"> {{student.attendance_percentage}} %</font></h1>
+    {% endif %}
 </form>
 </body>
 </html>

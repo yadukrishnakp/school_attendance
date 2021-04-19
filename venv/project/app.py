@@ -54,7 +54,10 @@ def search_student():
     form = StudentForm()
     if form.validate_on_submit():
         student = Student.query.filter_by(student_name=form.student_name.data).first()
-        return render_template('login_success.html', student=student, form=form)
+        if student:
+            return render_template('login_success.html', student=student,form=form)
+        else:
+            return redirect(url_for('search_student'))
     return render_template('login_success.html', form=form)
 
 
