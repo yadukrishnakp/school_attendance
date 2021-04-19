@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>school</title>
+</head>
+<body>
+<h3>
+Navamukunda Higher Secondary School &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+
+        <a href="{{url_for('search_student') }}">attendance percentage</a>&nbsp;
+        <a href="{{url_for('home') }}">Logout</a>&nbsp;
+    </h3>
+    <hr>
+
+<form action="/add_student" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <br>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <font color="green">{{ message }}</font>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <p>
+            {{ form.student_name.label }}<br>
+            {{ form.student_name(size=42) }}<br>
+            {% for error in form.student_name.errors %}
+            <small><span style="color: red;">{{error}}</span></small>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.student_class.label }}<br>
+            {{ form.student_class(size=42) }}<br>
+            {% for error in form.student_class.errors %}
+            <small><span style="color: red;">{{error}}</span></small>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.student_division.label }}<br>
+            {{ form.student_division(size=42) }}<br>
+            {% for error in form.student_division.errors %}
+            <small><span style="color: red;">{{error}}</span></small>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.attendance_percentage.label }}<br>
+            {{ form.attendance_percentage(size=42) }}<br>
+            {% for error in form.attendance_percentage.errors %}
+            <small><span style="color: red;">{{error}}</span></small>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+</form>
+
+</body>
+</html>

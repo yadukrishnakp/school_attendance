@@ -33,6 +33,13 @@
             {% endfor %}
         </p>
         <p>{{ form.submit() }}</p>
-<small>if you have an account&nbsp;<a href="{{url_for('register') }}">Register</a></small>
+<small>if you have an account&nbsp;<a href="{{url_for('login') }}">Login</a></small>&nbsp;
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+                <font color="green">{{ message }}</font>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
 </form>
 {% endblock content %}

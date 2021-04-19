@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body><h3>
+Navamukunda Higher Secondary School &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+
+        <a href="{{url_for('add_student') }}">Add student</a>&nbsp;
+        <a href="{{url_for('home') }}">Logout</a>&nbsp;
+    </h3>
+    <hr>
+<h2>Search student attendance</h2>
+<form action="/search_student" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <br>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <font color="red">{{ message }}</font>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <p>
+            {{ form.student_name.label }}<br>
+            {{ form.student_name(size=42) }}<br>
+            {% for error in form.student_name.errors %}
+            <small><span style="color: red;">{{error}}</span></small>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.student_class.label }}<br>
+            {{ form.student_class(size=42) }}<br>
+            {% for error in form.student_class.errors %}
+            <small><span style="color: red;">{{error}}</span></small>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.student_division.label }}<br>
+            {{ form.student_division(size=42) }}<br>
+            {% for error in form.student_division.errors %}
+            <small><span style="color: red;">{{error}}</span></small>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p><br>
+    <br>
+
+    <h1>Attendance Percentage of {{ student.student_name}} is <font color="blue">{{student.attendance_percentage}}%</font></h1>
+
+</form>
+</body>
+</html>

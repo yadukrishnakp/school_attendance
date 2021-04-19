@@ -1,23 +1,4 @@
 {% extends "base.html" %}
 {% block content %}
-<form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <br>
-            <p>
-            {{ form.email.label }}<br>
-            {{ form.email(size=42) }}<br>
-            {% for error in form.email.errors %}
-            <small><span style="color: red;">{{error}}</span></small>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=42) }}<br>
-            {% for error in form.password.errors %}
-            <small><span style="color: red;">{{error}}</span></small>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-
-</form>
+<img height="1050" width="1850" src="{{url_for('static', filename='istockphoto-1031384160-1024x1024.jpg')}}" />
 {% endblock content %}
