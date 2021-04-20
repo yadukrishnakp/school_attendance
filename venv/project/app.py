@@ -1,17 +1,21 @@
-from flask import Flask, render_template, url_for, redirect, flash
+from flask import Flask, render_template, url_for, redirect, flash, session, request, g
 from models import LoginForm, RegistrationForm, StudentForm, AddStudent
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from flask_login import current_user, login_required, logout_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///school.db'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(40), unique=True, nullable=False)
@@ -21,7 +25,12 @@ class User(db.Model):
         return f"User('{self.username}', '{self.email}')"
 
 
-class Student(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+class Student(UserMixin, db.Model):
     admission_number = db.Column(db.Integer, primary_key=True)
     student_name = db.Column(db.String(20), nullable=False)
     student_class = db.Column(db.Integer, nullable=False)
@@ -39,30 +48,53 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # if request.method == 'POST':
+    #session.pop('user', None)
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            # user = form.email.data
+            # session['user'] = user
             return redirect(url_for('search_student'))
         else:
             flash("check email and password is correct")
+    # else:
+    #     if "user" in session:
+    #         return redirect(url_for('search_student'))
     return render_template('login.html', form=form)
 
 
 @app.route('/search_student', methods=['GET', 'POST'])
+@login_required
 def search_student():
     form = StudentForm()
+    # if "user" in session:
+    # user = session['user']
     if form.validate_on_submit():
         student = Student.query.filter_by(student_name=form.student_name.data).first()
         if student:
-            return render_template('login_success.html', student=student,form=form)
+            return render_template('login_success.html', student=student, form=form)
         else:
             return redirect(url_for('search_student'))
     return render_template('login_success.html', form=form)
+    # else:
+    #     return redirect(url_for('login'))
+
+
+# @app.before_request
+# def before_request():
+#     # g.user = None
+#     if 'user' in session:
+#         g.user = session['user']
 
 
 @app.route('/add_student', methods=['GET', 'POST'])
+@login_required
 def add_student():
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('login'))
     form = AddStudent()
     if form.validate_on_submit():
         student = Student(student_name=form.student_name.data, student_class=form.student_class.data,
@@ -88,6 +120,13 @@ def register():
         return redirect(url_for('register'))
     return render_template('register.html', form=form)
 
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    session.pop('user', None)
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':
