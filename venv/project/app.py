@@ -48,21 +48,14 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # if request.method == 'POST':
-    #session.pop('user', None)
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
-            # user = form.email.data
-            # session['user'] = user
             return redirect(url_for('search_student'))
         else:
             flash("check email and password is correct")
-    # else:
-    #     if "user" in session:
-    #         return redirect(url_for('search_student'))
     return render_template('login.html', form=form)
 
 
@@ -70,8 +63,6 @@ def login():
 @login_required
 def search_student():
     form = StudentForm()
-    # if "user" in session:
-    # user = session['user']
     if form.validate_on_submit():
         student = Student.query.filter_by(student_name=form.student_name.data).first()
         if student:
@@ -79,15 +70,6 @@ def search_student():
         else:
             return redirect(url_for('search_student'))
     return render_template('login_success.html', form=form)
-    # else:
-    #     return redirect(url_for('login'))
-
-
-# @app.before_request
-# def before_request():
-#     # g.user = None
-#     if 'user' in session:
-#         g.user = session['user']
 
 
 @app.route('/add_student', methods=['GET', 'POST'])
